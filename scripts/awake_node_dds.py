@@ -21,6 +21,10 @@ import threading
 import datetime
 from unitree_sdk2py.utils.crc import CRC
 
+angle_topic_name = "rt/speaker_angle"
+# 50 Hz publishing
+
+
 class CircleMic:
     def __init__(self, port):
         self.serialHandle = serial.Serial(port, 115200, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0.02)
@@ -168,6 +172,7 @@ class AwakeNode:
         mic_type = rospy.get_param('~mic_type', 'mic6_circle')
         port = rospy.get_param('~port', '/dev/ttyUSB0')
         awake_word = rospy.get_param('~awake_word', 'xiao3 hong4 xiao3 hong4')
+        network_interface = rospy.get_param('~network_interface', 'eth0')
         self.mic = CircleMic(port)
 
         # we do not need these service
@@ -184,9 +189,11 @@ class AwakeNode:
 
         print('>>>>>Wake up word: %s' % awake_word)
 
+        ChannelFactoryInitialize(0, network_interface)
+
         #  added by Junwei. Publish the awake angle to a DDS topic
         # the content will be a json string
-        self.angle_publisher = ChannelPublisher("rt/speaker_angle", String_)
+        self.angle_publisher = ChannelPublisher(angle_topic_name, String_)
         self.angle_publisher.Init()
         self.crc = CRC()
         self.control_dt = 1/50.0
