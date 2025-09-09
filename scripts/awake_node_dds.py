@@ -80,7 +80,7 @@ class CircleMic:
             "type": "wakeup_keywords",
             "content": {
                 "keyword": 'xiao3 fei1 xiao3 fei1',
-                "threshold": "900",
+                "threshold": "100",
             }
         }
         
@@ -165,7 +165,7 @@ def print_with_time(*args, **kwargs):
 
 class AwakeNode:
     def __init__(self, name):
-
+        rospy.init_node(name)
         signal.signal(signal.SIGINT, self.shutdown)
 
         mic_type = rospy.get_param('~mic_type', 'mic6_circle')
@@ -173,12 +173,18 @@ class AwakeNode:
         awake_word = rospy.get_param('~awake_word', 'xiao3 fei1 xiao3 fei1')
         network_interface = rospy.get_param('~network_interface', 'eth0')
 
-        self.mic = CircleMic(port)
-
-        print("Waiting for microphone hardware to initialize...")
+        # 3. Wait for the physical hardware to boot up.
+        rospy.loginfo("Waiting for microphone hardware to initialize...")
         time.sleep(3)
 
-        rospy.init_node(name)
+        # 4. Now, connect to the serial port.
+        try:
+            self.mic = CircleMic(port)
+            rospy.loginfo("Successfully connected to microphone.")
+        except serial.serialutil.SerialException as e:
+            rospy.logerr(f"Failed to connect to microphone on port {port}: {e}")
+            rospy.signal_shutdown("Could not initialize microphone hardware.")
+            return
 
         # we do not need these service
         #rospy.Service('~set_mic_type', SetString, self.set_mic_type_srv)
