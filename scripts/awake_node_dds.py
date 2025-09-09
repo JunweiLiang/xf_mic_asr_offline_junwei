@@ -80,7 +80,7 @@ class CircleMic:
             "type": "wakeup_keywords",
             "content": {
                 "keyword": "xiao3 hong4 xiao3 hong4",
-                "threshold": "500", 
+                "threshold": "400",
             }
         }
         
