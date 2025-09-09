@@ -80,7 +80,7 @@ class CircleMic:
             "type": "wakeup_keywords",
             "content": {
                 "keyword": "xiao3 hong4 xiao3 hong4",
-                "threshold": "400",
+                "threshold": "900",
             }
         }
         
@@ -173,6 +173,10 @@ class AwakeNode:
         port = rospy.get_param('~port', '/dev/ttyUSB0')
         awake_word = rospy.get_param('~awake_word', 'xiao3 hong4 xiao3 hong4')
         network_interface = rospy.get_param('~network_interface', 'eth0')
+
+        print("Waiting for microphone hardware to initialize...")
+        time.sleep(3)
+
         self.mic = CircleMic(port)
 
         # we do not need these service
