@@ -18,7 +18,7 @@ from unitree_sdk2py.core.channel import ChannelPublisher, ChannelFactoryInitiali
 from unitree_sdk2py.idl.std_msgs.msg.dds_ import String_
 
 import threading
-import datetime
+from datetime import datetime
 from unitree_sdk2py.utils.crc import CRC
 
 angle_topic_name = "rt/speaker_angle"
