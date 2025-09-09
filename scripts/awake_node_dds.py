@@ -84,13 +84,13 @@ class CircleMic:
             "type": "wakeup_keywords",
             "content": {
                 "keyword": 'xiao3 huan4 xiao3 huan4',
-                "threshold": "500",
+                "threshold": "200",
             }
         }
         
         param['content']['keyword'] = str_pinyin
         header = [0xA5, 0x01, 0x05]  
-        self.send(header, param)
+        return self.send(header, param)
 
     # 数据串口发送
     def send(self, header, args):
