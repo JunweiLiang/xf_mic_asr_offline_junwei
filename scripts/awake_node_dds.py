@@ -28,6 +28,10 @@ angle_topic_name = "rt/speaker_angle"
 class CircleMic:
     def __init__(self, port):
         self.serialHandle = serial.Serial(port, 115200, serial.EIGHTBITS, serial.PARITY_NONE, serial.STOPBITS_ONE, timeout=0.02)
+
+        # 2. ADD THIS LINE: Pause the script to give the hardware time to boot up
+        time.sleep(1.5)
+
         self.running = True
         self.key = r"{\"content.*?aiui_event\"}"
         self.key_type = r"{\"code.*?\"}"
@@ -110,7 +114,12 @@ class CircleMic:
                     
                     packet.extend(data)
 
-                    checksum = 255 - (sum(packet) % 256) + 1 # junwei: 这个有问题
+                    # OLD LINE:
+                    # checksum = 255 - (sum(packet) % 256) + 1
+
+                    # NEW, SAFER LINE:
+                    checksum = (256 - (sum(packet) & 0xFF)) & 0xFF
+
                     packet.append(checksum)
                     
                     self.serialHandle.write(packet)  # 发送主控消息
