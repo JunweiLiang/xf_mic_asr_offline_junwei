@@ -195,7 +195,6 @@ class AwakeNode:
         # the content will be a json string
         self.angle_publisher = ChannelPublisher(angle_topic_name, String_)
         self.angle_publisher.Init()
-        self.crc = CRC()
         self.control_dt = 1/50.0
 
         # initial data
@@ -219,8 +218,6 @@ class AwakeNode:
                 angle_data = self.current_angle_data
 
             self.msg.data = json.dumps(angle_data)
-
-            self.msg.crc = self.crc.Crc(self.msg)
             self.angle_publisher.Write(self.msg)
 
             current_time = time.time()
