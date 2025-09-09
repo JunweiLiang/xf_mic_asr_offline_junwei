@@ -73,14 +73,14 @@ class CircleMic:
         return False
 
     # 唤醒词更换（浅定制）
-    def set_wakeup_word(self, str_pinyin='xiao3 fei1 xiao3 fei1'):
+    def set_wakeup_word(self, str_pinyin='xiao3 huan4 xiao3 huan4'):
         # 参数为中文拼音
         # 更多参数请参考https://aiui.xfyun.cn/doc/aiui/3_access_service/access_hardware/r818/protocol.html
         param ={
             "type": "wakeup_keywords",
             "content": {
-                "keyword": 'xiao3 fei1 xiao3 fei1',
-                "threshold": "100",
+                "keyword": 'xiao3 huan4 xiao3 huan4',
+                "threshold": "10",
             }
         }
         
@@ -170,7 +170,7 @@ class AwakeNode:
 
         mic_type = rospy.get_param('~mic_type', 'mic6_circle')
         port = rospy.get_param('~port', '/dev/ttyUSB0')
-        awake_word = rospy.get_param('~awake_word', 'xiao3 fei1 xiao3 fei1')
+        awake_word = rospy.get_param('~awake_word', 'xiao3 huan4 xiao3 huan4')
         network_interface = rospy.get_param('~network_interface', 'eth0')
 
         # 3. Wait for the physical hardware to boot up.
@@ -195,11 +195,10 @@ class AwakeNode:
         #self.awake_angle_pub = rospy.Publisher('~awake_angle', Int32, queue_size=1)
         #self.awake_flag_pub = rospy.Publisher('~awake_flag', Bool, queue_size=1)
 
-        self.mic.switch_mic(mic_type)
-        self.mic.set_wakeup_word(awake_word)
+        print_with_time(self.mic.switch_mic(mic_type))
+        print_with_time(self.mic.set_wakeup_word(awake_word))
 
-        print('>>>>>Wake up word: %s' % awake_word)
-        print(self.mic.get_setting())
+        print_with_time('>>>>>Wake up word: %s' % awake_word)
 
         ChannelFactoryInitialize(0, network_interface)
 
