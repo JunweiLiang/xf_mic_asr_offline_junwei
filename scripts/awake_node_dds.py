@@ -166,7 +166,6 @@ def print_with_time(*args, **kwargs):
 class AwakeNode:
     def __init__(self, name):
 
-
         signal.signal(signal.SIGINT, self.shutdown)
 
         mic_type = rospy.get_param('~mic_type', 'mic6_circle')
@@ -194,6 +193,7 @@ class AwakeNode:
         self.mic.set_wakeup_word(awake_word)
 
         print('>>>>>Wake up word: %s' % awake_word)
+        print(self.mic.get_setting())
 
         ChannelFactoryInitialize(0, network_interface)
 
