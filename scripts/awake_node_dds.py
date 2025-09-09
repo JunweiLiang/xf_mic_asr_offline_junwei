@@ -184,6 +184,7 @@ class AwakeNode:
 
         # 3. Wait for the physical hardware to boot up.
         rospy.loginfo("Waiting for microphone hardware to initialize...")
+        time.sleep(3)
 
         # 4. Now, connect to the serial port.
         try:
