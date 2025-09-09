@@ -73,13 +73,13 @@ class CircleMic:
         return False
 
     # 唤醒词更换（浅定制）
-    def set_wakeup_word(self, str_pinyin='tan3 ke4 tan3 ke4'):
+    def set_wakeup_word(self, str_pinyin='xiao3 fei1 xiao3 fei1'):
         # 参数为中文拼音
         # 更多参数请参考https://aiui.xfyun.cn/doc/aiui/3_access_service/access_hardware/r818/protocol.html
         param ={
             "type": "wakeup_keywords",
             "content": {
-                "keyword": 'tan3 ke4 tan3 ke4',
+                "keyword": 'xiao3 fei1 xiao3 fei1',
                 "threshold": "900",
             }
         }
@@ -171,7 +171,7 @@ class AwakeNode:
 
         mic_type = rospy.get_param('~mic_type', 'mic6_circle')
         port = rospy.get_param('~port', '/dev/ttyUSB0')
-        awake_word = rospy.get_param('~awake_word', 'tan3 ke4 tan3 ke4')
+        awake_word = rospy.get_param('~awake_word', 'xiao3 fei1 xiao3 fei1')
         network_interface = rospy.get_param('~network_interface', 'eth0')
 
         self.mic = CircleMic(port)
