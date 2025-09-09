@@ -73,13 +73,13 @@ class CircleMic:
         return False
 
     # 唤醒词更换（浅定制）
-    def set_wakeup_word(self, str_pinyin="xiao3 hong4 xiao3 hong4"):
+    def set_wakeup_word(self, str_pinyin='tan3 ke4 tan3 ke4'):
         # 参数为中文拼音
         # 更多参数请参考https://aiui.xfyun.cn/doc/aiui/3_access_service/access_hardware/r818/protocol.html
         param ={
             "type": "wakeup_keywords",
             "content": {
-                "keyword": "xiao3 hong4 xiao3 hong4",
+                "keyword": 'tan3 ke4 tan3 ke4',
                 "threshold": "900",
             }
         }
@@ -165,19 +165,21 @@ def print_with_time(*args, **kwargs):
 
 class AwakeNode:
     def __init__(self, name):
-        rospy.init_node(name)
+
 
         signal.signal(signal.SIGINT, self.shutdown)
 
         mic_type = rospy.get_param('~mic_type', 'mic6_circle')
         port = rospy.get_param('~port', '/dev/ttyUSB0')
-        awake_word = rospy.get_param('~awake_word', 'xiao3 hong4 xiao3 hong4')
+        awake_word = rospy.get_param('~awake_word', 'tan3 ke4 tan3 ke4')
         network_interface = rospy.get_param('~network_interface', 'eth0')
+
+        self.mic = CircleMic(port)
 
         print("Waiting for microphone hardware to initialize...")
         time.sleep(3)
 
-        self.mic = CircleMic(port)
+        rospy.init_node(name)
 
         # we do not need these service
         #rospy.Service('~set_mic_type', SetString, self.set_mic_type_srv)
