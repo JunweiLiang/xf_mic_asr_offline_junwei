@@ -77,14 +77,14 @@ class CircleMic:
         return False
 
     # 唤醒词更换（浅定制）
-    def set_wakeup_word(self, str_pinyin='xiao3 huan4 xiao3 huan4'):
+    def set_wakeup_word(self, str_pinyin='xiao3 bai2 xiao3 bai2'):
         # 参数为中文拼音
         # 更多参数请参考https://aiui.xfyun.cn/doc/aiui/3_access_service/access_hardware/r818/protocol.html
         param ={
             "type": "wakeup_keywords",
             "content": {
-                "keyword": 'xiao3 huan4 xiao3 huan4',
-                "threshold": "200",
+                "keyword": 'xiao3 bai2 xiao3 bai2',
+                "threshold": "200", # 阈值越高越不敏感，越需要发音清晰，不容易误触发；#默认900
             }
         }
         
@@ -145,6 +145,7 @@ class CircleMic:
             count = self.serialHandle.inWaiting()
             if count != 0:
                 recv_data = self.serialHandle.readall()
+                print_with_time("recv_data：%s" % recv_data)
                 if b'content' in recv_data:
                     pattern = re.compile(self.key)
                     m = re.search(pattern, str(recv_data).replace('\\', ''))
@@ -179,7 +180,7 @@ class AwakeNode:
 
         mic_type = rospy.get_param('~mic_type', 'mic6_circle')
         port = rospy.get_param('~port', '/dev/ttyUSB0')
-        awake_word = rospy.get_param('~awake_word', 'xiao3 huan4 xiao3 huan4')
+        awake_word = rospy.get_param('~awake_word', 'xiao3 bai2 xiao3 bai2')
         network_interface = rospy.get_param('~network_interface', 'eth0')
 
         # 3. Wait for the physical hardware to boot up.
@@ -205,6 +206,7 @@ class AwakeNode:
         #self.awake_flag_pub = rospy.Publisher('~awake_flag', Bool, queue_size=1)
 
         print_with_time(self.mic.switch_mic(mic_type))
+        print_with_time("设置唤醒词结果：")
         print_with_time(self.mic.set_wakeup_word(awake_word))
 
         print_with_time('>>>>>Wake up word: %s' % awake_word)
@@ -245,17 +247,6 @@ class AwakeNode:
             sleep_time = max(0, (self.control_dt - all_t_elapsed))
             time.sleep(sleep_time)
 
-    def set_mic_type_srv(self, msg):
-        res = self.mic.switch_mic(msg.data) 
-        return [True, str(res)]
-
-    def get_setting_srv(self, msg):
-        res = self.mic.get_setting()
-        return [True, str(res)]
-
-    def set_wakeup_word_srv(self, msg):
-        self.mic.set_wakeup_word(msg.data)
-        return [True, 'success']
        
     def shutdown(self, signum, frame):
         self.mic.stop()
