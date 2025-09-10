@@ -84,7 +84,7 @@ class CircleMic:
             "type": "wakeup_keywords",
             "content": {
                 "keyword": 'xiao3 bai2 xiao3 bai2',
-                "threshold": "200", # 阈值越高越不敏感，越需要发音清晰，不容易误触发；#默认900
+                "threshold": "900", # 阈值越高越不敏感，越需要发音清晰，不容易误触发；#默认900
             }
         }
         
@@ -145,14 +145,15 @@ class CircleMic:
             count = self.serialHandle.inWaiting()
             if count != 0:
                 recv_data = self.serialHandle.readall()
-                print_with_time("recv_data：%s" % recv_data)
+
                 if b'content' in recv_data:
                     pattern = re.compile(self.key)
                     m = re.search(pattern, str(recv_data).replace('\\', ''))
                     if m is not None:
                         m = m.group(0).replace('"{"', '{"').replace('}"', '}')
                         if m is not None:
-                            angle = int(json.loads(m)['content']['info']['ivw']['angle'])
+                            full_data = json.loads(m)
+                            angle = int(full_data['content']['info']['ivw']['angle'])
 
                             #if flag_pub is not None and angle_pub is not None:
                             #    flag_pub.publish(True)
@@ -161,6 +162,7 @@ class CircleMic:
                             with node_obj.ctrl_lock:
                                 node_obj.current_angle_data["angle"] = angle
                                 node_obj.current_angle_data["timestamp"] = time.time()
+                            print_with_time("recv_data：%s" % full_data)
                             print_with_time("唤醒角度：%s" % angle)
             else:
                 self.serialHandle.write([0xa5, 0x01, 0x01, 0x04, 0x00, 0x00, 0x00, 0xa5, 0x00, 0x00, 0x00, 0xb0])
