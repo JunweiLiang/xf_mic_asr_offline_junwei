@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
     <arg name="appid"               default="5e59d3a8"/>
-    <arg name="chinese_awake_words" default="xiao3 bai2 xiao3 bai2"/>
+    <arg name="chinese_awake_words" default="xiao3 ke1 xiao3 ke1"/>
     <arg name="english_awake_words" default="hello red"/>
     <arg name="language"            default="Chinese"/>
 
