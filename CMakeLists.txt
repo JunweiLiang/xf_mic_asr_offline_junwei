@@ -16,7 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 link_directories(
-  lib/x64
+  lib/arm64
 )
 
 # link_directories(/usr/lib/)
